@@ -17,28 +17,6 @@ public class test {
 
         user = new User("1",1,1,1);
 
-        JButton genderButton = new JButton("남성");
-        genderButton.addActionListener(e -> {
-//            user.updateManGender();
-//
-//            label.setText(user.userGender());
-//            panel.setVisible(false);
-//            panel.setVisible(true);
-//            frame.setVisible(true);
-        });
-        panel.add(genderButton);
-
-        JButton gender2Button = new JButton("여성");
-        genderButton.addActionListener(e -> {
-            user.updateWomanGender();
-            panel.setVisible(false);
-            panel.setVisible(true);
-            frame.setVisible(true);
-        });
-        panel.add(gender2Button);
-
-        label = new JLabel(user.userGender());
-        panel.add(label);
 
 
         frame.setVisible(true);
