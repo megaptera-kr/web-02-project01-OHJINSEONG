@@ -1,12 +1,12 @@
 package models;
 
 public class User {
-
     private String gender;
     private int age;
     private int height;
     private int weight;
 
+    private String findGender;
     public User(String gender, int age, int height, int weight) {
         this.gender = gender;
 
@@ -15,16 +15,16 @@ public class User {
         this.weight = weight;
     }
 
-    public void updateManGender() {
-        gender = "남성";
+    public void updateManGender(String gender) {
+        findGender = gender;
     }
 
     public void updateWomanGender() {
-        gender = "여성";
+        findGender = "여성";
     }
 
     public String userGender(){
-        return gender;
+        return findGender;
     }
 
     public String toString() {

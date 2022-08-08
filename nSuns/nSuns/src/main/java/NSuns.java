@@ -1,4 +1,5 @@
 import models.User;
+import utils.LoadUserBody;
 import utils.SaveUserBody;
 
 
@@ -6,30 +7,36 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 
 public class NSuns {
-
     private JFrame frame;
     private JPanel contentPanel;
     private User user;
     private int age;
     private int height;
     private int weight;
-    private String gender;
     private JTextField heightTextField;
     private JTextField ageTextField;
     private JTextField weightTextField;
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         NSuns application = new NSuns();
 
         application.run();
     }
 
+    public NSuns() throws FileNotFoundException {
+        LoadUserBody loadUserBody = new LoadUserBody();
+
+        this.user = LoadUserBody.Loader();
+    }
+
     private void run() {
+        user = new User("", 0, 0, 0);
         frame = new JFrame("nSuns");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 600);
@@ -80,60 +87,52 @@ public class NSuns {
 
         panel.setLayout(new GridLayout(5, 2));
 
-        JButton genderButton = new JButton("남성");
-        genderButton.addActionListener(e -> {
-            user.updateManGender();
-        });
-        panel.add(genderButton);
+        panel.add(selectGenderButton("남성"));
 
-        JButton gender2Button = new JButton("여성");
-        genderButton.addActionListener(e -> {
-            user.updateWomanGender();
-        });
-        panel.add(gender2Button);
+        panel.add(selectGenderButton("여성"));
 
         panel.add(new JLabel("나이(세) : "));
-
-        ageTextField = new JTextField(10);
-        panel.add(ageTextField);
+        panel.add(ageTextField= new JTextField(10));
 
         panel.add(new JLabel("키(cm) : "));
-
-        heightTextField = new JTextField(10);
-        panel.add(heightTextField);
+        panel.add(heightTextField = new JTextField(10));
 
         panel.add(new JLabel("몸무게(kg) : "));
+        panel.add( weightTextField = new JTextField(10));
 
-        weightTextField = new JTextField(10);
-        panel.add(weightTextField);
+        panel.add(goBackButton("돌아가기"));
 
-        JButton goBackPageButton = new JButton("돌아가기");
-        goBackPageButton.addActionListener(e -> {
+        panel.add(nextPageButton());
+    }
+
+    private JButton goBackButton(String 돌아가기) {
+        JButton button = new JButton(돌아가기);
+        button.addActionListener(e -> {
             contentPanel.removeAll();
 
             initMenuPanel();
 
             updateDisplayPanel(contentPanel);
         });
-
-        panel.add(goBackPageButton);
-
-
-        panel.add(nextPageButton);
-        panel.add(nextPage());
+        return button;
     }
 
-    private JButton nextPage() {
+    private JButton selectGenderButton(String gender) {
+        JButton button = new JButton(gender);
+        button.addActionListener(e -> {
+            user.updateManGender(gender);
+        });
+        return button;
+    }
+
+    private JButton nextPageButton() {
         JButton button = new JButton("완료");
         button.addActionListener(e -> {
-
-
             age = Integer.parseInt(ageTextField.getText());
             height = Integer.parseInt(heightTextField.getText());
             weight = Integer.parseInt(weightTextField.getText());
-            gender = user.userGender();
 
-//            user = new User(gender, age, height, weight);
+            user = new User(user.userGender(), age, height, weight);
 
             contentPanel.removeAll();
 
@@ -168,32 +167,3 @@ public class NSuns {
         });
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-//    JButton nextPageButton = new JButton("완료");
-//        nextPageButton.addActionListener(e -> {
-//
-//
-//                age = Integer.parseInt(ageTextField.getText());
-//                height = Integer.parseInt(heightTextField.getText());
-//                weight = Integer.parseInt(weightTextField.getText());
-//                gender = user.userGender();
-//
-////            user = new User(gender, age, height, weight);
-//
-//                contentPanel.removeAll();
-//
-//                SaveUserBody();
-//
-//                initLifeStylePanel();
-//
-//                updateDisplayPanel(contentPanel);
