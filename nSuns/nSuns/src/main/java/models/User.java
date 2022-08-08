@@ -15,12 +15,8 @@ public class User {
         this.weight = weight;
     }
 
-    public void updateManGender(String gender) {
+    public void updateGender(String gender) {
         findGender = gender;
-    }
-
-    public void updateWomanGender() {
-        findGender = "여성";
     }
 
     public String userGender(){
