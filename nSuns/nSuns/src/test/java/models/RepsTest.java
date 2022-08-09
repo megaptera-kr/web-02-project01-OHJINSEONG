@@ -1,11 +1,12 @@
-import models.Reps;
+package models;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class NSunsTest {
+class RepsTest {
     @Test
-    void loadReps(){
+    void creation(){
         Reps reps = new Reps();
     }
 

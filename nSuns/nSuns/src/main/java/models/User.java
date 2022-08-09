@@ -26,4 +26,20 @@ public class User {
     public String toString() {
         return gender + "," + age + "," + height + "," + weight;
     }
+
+    public int weight(){
+        return weight;
+    }
+
+    public int height(){
+        return height;
+    }
+
+    public int age(){
+        return age;
+    }
+
+    public String gender(){
+        return gender;
+    }
 }

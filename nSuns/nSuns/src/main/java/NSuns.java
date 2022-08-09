@@ -1,6 +1,4 @@
-import models.CalorieCalculator;
-import models.LifeStyle;
-import models.User;
+import models.*;
 import utils.LoadUserBody;
 import utils.SaveUserBody;
 
@@ -19,9 +17,6 @@ public class NSuns {
     private JFrame frame;
     private JPanel contentPanel;
     private User user;
-    private int age;
-    private int height;
-    private int weight;
     private JTextField heightTextField;
     private JTextField ageTextField;
     private JTextField weightTextField;
@@ -30,6 +25,12 @@ public class NSuns {
     private List<LifeStyle> lifeStyles;
     private JPanel showDisplayPanel;
     private CalorieCalculator calorieCalculator;
+    private JTextField benchPress1RM;
+    private JTextField squt1RM;
+    private JTextField deadLift1RM;
+    private JTextField overHeadPress1RM;
+    private TraningWeight1RM traningWeight1RM;
+    private TraingWeightCalculator traingWeightCalculator;
 
 
     public static void main(String[] args) throws FileNotFoundException {
@@ -47,6 +48,9 @@ public class NSuns {
     private void run() {
         createLifeStyles();
 
+        List<Reps> reps = loadReps();
+        traingWeightCalculator = new TraingWeightCalculator();
+        traningWeight1RM = new TraningWeight1RM(0, 0, 0, 0);
         user = new User("", 0, 0, 0);
         frame = new JFrame("nSuns");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,27 +69,166 @@ public class NSuns {
         frame.setVisible(true);
     }
 
+    private List<Reps> loadReps() {
+        return null;
+    }
+
     private void initFirstPage() {
         menuPanel.add(setCalorieButton("기초 대사량"));
 
-//        JButton workOutStartButton = new JButton("프로그램 시작");
-//
-//        menuPanel.add(workOutStartButton);
-//
-        JButton setWeightButton = new JButton("프로그램 세팅");
-        menuPanel.add(setWeightButton);
+        menuPanel.add(programStartButton("프로그램 시작"));
+
+        menuPanel.add(programSetting("프로그램 세팅"));
     }
 
-    private void createLifeStyles() {
-        lifeStyles = new ArrayList<>();
-        LifeStyle lifeStyle1 = new LifeStyle("빈둥빈둥", 1.4);
-        lifeStyles.add(lifeStyle1);
-        LifeStyle lifeStyle2 = new LifeStyle("좌식업무", 1.5);
-        lifeStyles.add(lifeStyle2);
-        LifeStyle lifeStyle3 = new LifeStyle("돌아다니는 업무", 1.75);
-        lifeStyles.add(lifeStyle3);
-        LifeStyle lifeStyle4 = new LifeStyle("활동적인 업무", 2);
-        lifeStyles.add(lifeStyle4);
+    private JButton programSetting(String 프로그램_세팅) {
+        JButton button = new JButton(프로그램_세팅);
+        button.addActionListener(e -> {
+            displayRemoveAll();
+
+            initProgramSettingPanel();
+
+            updateAllDisplay();
+        });
+        return button;
+    }
+
+    private void initProgramSettingPanel() {
+        menuPanel.add(goFisrtPagePanel("돌아가기"));
+        menuPanel.add(programSettingButton());
+
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 0, 100));
+        contentPanel.setLayout(new GridLayout(4, 2));
+        contentPanel.add(new JLabel("벤치프레스(kg) 1rm: "));
+        contentPanel.add(benchPress1RM = new JTextField(10));
+
+        contentPanel.add(new JLabel("스쿼트(kg) 1rm: "));
+        contentPanel.add(squt1RM = new JTextField(10));
+
+        contentPanel.add(new JLabel("오버헤드 프레스(kg) 1rm: "));
+        contentPanel.add(overHeadPress1RM = new JTextField(10));
+
+        contentPanel.add(new JLabel("데드리프트(kg) 1rm: "));
+        contentPanel.add(deadLift1RM = new JTextField(10));
+
+        showDisplayPanel.setPreferredSize(new Dimension(200, 400));
+    }
+
+    private JButton programSettingButton() {
+        JButton button = new JButton("완료");
+        button.addActionListener(e -> {
+            creatTraningWeight1RMCreation();
+
+            displayRemoveAll();
+
+            initFirstPage();
+
+            updateAllDisplay();
+        });
+        return button;
+    }
+
+    private void creatTraningWeight1RMCreation() {
+        traningWeight1RM = new TraningWeight1RM(Double.parseDouble(benchPress1RM.getText()),
+                Double.parseDouble(squt1RM.getText()), Double.parseDouble(overHeadPress1RM.getText()),
+                Double.parseDouble(deadLift1RM.getText()));
+    }
+
+    private JButton programStartButton(String 프로그램_시작) {
+        JButton button = new JButton(프로그램_시작);
+        button.addActionListener(e -> {
+            displayRemoveAll();
+
+            initSelectProgramPanel();
+
+            updateAllDisplay();
+        });
+        return button;
+    }
+
+    private void initSelectProgramPanel() {
+        menuPanel.add(goFisrtPagePanel("돌아가기"));
+
+        contentPanel.setLayout(new GridLayout(1, 4));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 25));
+        contentPanel.add(programButton("벤치프레스"));
+        contentPanel.add(programButton("스쿼트"));
+        contentPanel.add(programButton("오버헤드프레스"));
+        contentPanel.add(programButton("데드리프트"));
+
+        showDisplayPanel.setPreferredSize(new Dimension(200, 500));
+    }
+
+    private JButton programButton(String workOut) {
+        JButton button = new JButton(workOut);
+        button.addActionListener(e -> {
+            displayRemoveAll();
+
+            initProgramPanel(workOut);
+
+            updateAllDisplay();
+        });
+        return button;
+    }
+
+    private void initProgramPanel(String workOut) {
+        menuPanel.add(goSelectProgramPanel("돌아가기"));
+        menuPanel.add(new JButton("완료"));
+
+        TrainingWeightCalculate(workOut);
+
+        showDisplayPanel.setPreferredSize(new Dimension(200, 200));
+    }
+
+    private void TrainingWeightCalculate(String workOut) {
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(30,30,0,30));
+        contentPanel.setLayout(new GridLayout(8, 2));
+        for (int i = 0; i < 3; i += 1) {
+            switch (workOut) {
+                case "벤치프레스" -> contentPanel.add(new JLabel((i + 1) + ".Set " + workOut + " " +
+                        traingWeightCalculator.calculate((0.75 + 0.1 * i) * traningWeight1RM.benchPress()) +
+                        "kg(권장 " + (5 - 2 * i) + "회)"));
+                case "스쿼트" -> contentPanel.add(new JLabel((i + 1) + ".Set " + workOut + " " +
+                        traingWeightCalculator.calculate((0.75 + 0.1 * i) * traningWeight1RM.squt()) +
+                        "kg(권장 " + (5 - 2 * i) + "회)"));
+                case "오버헤드프레스" -> contentPanel.add(new JLabel((i + 1) + ".Set " + workOut + " " +
+                        traingWeightCalculator.calculate((0.75 + 0.1 * i) * traningWeight1RM.overHeadPress()) +
+                        "kg(권장 " + (5 - 2 * i) + "회)"));
+                case "데드리프트" -> contentPanel.add(new JLabel((i + 1) + ".Set " + workOut + " " +
+                        traingWeightCalculator.calculate((0.75 + 0.1 * i) * traningWeight1RM.deadLift()) +
+                        "kg(권장 " + (5 - 2 * i) + "회)"));
+            }
+            contentPanel.add(new JTextField(10));
+        }
+        for (int i = 0; i < 5; i += 1) {
+            switch (workOut) {
+                case "벤치프레스" -> contentPanel.add(new JLabel((i + 4) + ".Set " + workOut + " " +
+                        traingWeightCalculator.calculate((0.90 - 0.05 * i) * traningWeight1RM.benchPress()) +
+                        "kg(권장 3회)"));
+                case "스쿼트" -> contentPanel.add(new JLabel((i + 4) + ".Set " + workOut + " " +
+                        traingWeightCalculator.calculate((0.90 - 0.05 * i) * traningWeight1RM.squt()) +
+                        "kg(권장 3회)"));
+                case "오버헤드프레스" -> contentPanel.add(new JLabel((i + 4) + ".Set " + workOut + " " +
+                        traingWeightCalculator.calculate((0.90 - 0.05 * i) * traningWeight1RM.overHeadPress()) +
+                        "kg(권장 3회)"));
+                case "데드리프트" -> contentPanel.add(new JLabel((i + 4) + ".Set " + workOut + " " +
+                        traingWeightCalculator.calculate((0.90 - 0.05 * i) * traningWeight1RM.deadLift()) +
+                        "kg(권장 3회)"));
+            }
+            contentPanel.add(new JTextField(10));
+        }
+    }
+
+    private JButton goSelectProgramPanel(String 돌아가기) {
+        JButton button = new JButton(돌아가기);
+        button.addActionListener(e -> {
+            displayRemoveAll();
+
+            initSelectProgramPanel();
+
+            updateAllDisplay();
+        });
+        return button;
     }
 
     private void initContentPanel() {
@@ -150,17 +293,37 @@ public class NSuns {
     private JButton goFisrtPagePanel(String 돌아가기) {
         JButton button = new JButton(돌아가기);
         button.addActionListener(e -> {
-            menuPanel.removeAll();
-            contentPanel.removeAll();
-            showDisplayPanel.removeAll();
+            displayRemoveAll();
 
             initFirstPage();
 
-            updateDisplayPanel(menuPanel);
-            updateDisplayPanel(showDisplayPanel);
-            updateDisplayPanel(contentPanel);
+            updateAllDisplay();
         });
         return button;
+    }
+
+    private void createLifeStyles() {
+        lifeStyles = new ArrayList<>();
+        LifeStyle lifeStyle1 = new LifeStyle("빈둥빈둥", 1.4);
+        lifeStyles.add(lifeStyle1);
+        LifeStyle lifeStyle2 = new LifeStyle("좌식업무", 1.5);
+        lifeStyles.add(lifeStyle2);
+        LifeStyle lifeStyle3 = new LifeStyle("돌아다니는 업무", 1.75);
+        lifeStyles.add(lifeStyle3);
+        LifeStyle lifeStyle4 = new LifeStyle("활동적인 업무", 2);
+        lifeStyles.add(lifeStyle4);
+    }
+
+    private void updateAllDisplay() {
+        updateDisplayPanel(menuPanel);
+        updateDisplayPanel(contentPanel);
+        updateDisplayPanel(showDisplayPanel);
+    }
+
+    private void displayRemoveAll() {
+        menuPanel.removeAll();
+        contentPanel.removeAll();
+        showDisplayPanel.removeAll();
     }
 
     private JButton selectGenderButton(String gender) {
@@ -174,33 +337,32 @@ public class NSuns {
     private JButton goSelectLifeStylePanelButton() {
         JButton button = new JButton("완료");
         button.addActionListener(e -> {
-            age = Integer.parseInt(ageTextField.getText());
-            height = Integer.parseInt(heightTextField.getText());
-            weight = Integer.parseInt(weightTextField.getText());
+            createUserCreation();
 
             calculateBasicCalorie();
 
-            user = new User(user.userGender(), age, height, weight);
-
-            menuPanel.removeAll();
-            showDisplayPanel.removeAll();
+            displayRemoveAll();
 
             SaveUserBody();
 
             initLifeStylePanel();
 
-            updateDisplayPanel(menuPanel);
-            updateDisplayPanel(showDisplayPanel);
+            updateAllDisplay();
         });
         return button;
     }
 
+    private void createUserCreation() {
+        user = new User(user.userGender(), Integer.parseInt(ageTextField.getText()),
+                Integer.parseInt(heightTextField.getText()), Integer.parseInt(weightTextField.getText()));
+    }
+
     private void calculateBasicCalorie() {
-        if (user.userGender().equals("남성")) {
-            calorieCalculator.manBasicCalorie(weight, height, age);
+        if (user.gender().equals("남성")) {
+            calorieCalculator.manBasicCalorie(user.weight(), user.height(), user.age());
         }
-        if (user.userGender().equals("여성")) {
-            calorieCalculator.womanBasicCalorie(weight, height, age);
+        if (user.gender().equals("여성")) {
+            calorieCalculator.womanBasicCalorie(user.weight(), user.height(), user.age());
         }
     }
 
@@ -228,15 +390,11 @@ public class NSuns {
     private JButton goInputBodyPanel(String 돌아가기) {
         JButton button = new JButton(돌아가기);
         button.addActionListener(e -> {
-            menuPanel.removeAll();
-            contentPanel.removeAll();
-            showDisplayPanel.removeAll();
+            displayRemoveAll();
 
             initInputBodyPanel();
 
-            updateDisplayPanel(menuPanel);
-            updateDisplayPanel(contentPanel);
-            updateDisplayPanel(showDisplayPanel);
+            updateAllDisplay();
         });
         return button;
     }
