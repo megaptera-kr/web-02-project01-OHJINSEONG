@@ -14,19 +14,32 @@ public class TraningWeight1RM {
         this.deadLift1rm = deadLift1rm;
     }
 
-    public double benchPress(){
+    public double benchPress() {
         return benchPress1RM;
     }
 
-    public double squt(){
+    public double squt() {
         return squt1RM;
     }
 
-    public double overHeadPress(){
+    public double overHeadPress() {
         return overHeadPress1rm;
     }
 
-    public double deadLift(){
+    public double deadLift() {
         return deadLift1rm;
+    }
+
+    public void increaseWeight(String workOut, double increaseWeight) {
+        switch (workOut) {
+            case "벤치프레스" -> benchPress1RM += increaseWeight;
+            case "스쿼트" -> squt1RM += increaseWeight;
+            case "오버헤드프레스" -> overHeadPress1rm += increaseWeight;
+            case "데드리프트" -> deadLift1rm += increaseWeight;
+        }
+    }
+
+    public String toString() {
+        return benchPress1RM + "," + squt1RM + "," + overHeadPress1rm + "," + deadLift1rm;
     }
 }
