@@ -12,6 +12,7 @@ public class LoadUserBody {
         int age = 0;
         int height = 0;
         int weight = 0;
+        String name = "";
 
         File file = new File("userBodyLoader.csv");
 
@@ -26,8 +27,9 @@ public class LoadUserBody {
             age = Integer.parseInt(words[1]);
             height = Integer.parseInt(words[2]);
             weight = Integer.parseInt(words[3]);
+            name = words[4];
         }
 
-        return new User(gender, age, height, weight);
+        return new User(gender, age, height, weight, name);
     }
 }
