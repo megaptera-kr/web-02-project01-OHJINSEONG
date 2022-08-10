@@ -6,12 +6,14 @@ public class Weeks {
     private int overHeadPressIndex = 0;
     private int deadLiftIndex = 0;
     private int week;
+    private int startFrameIndex = 0;
 
 
-    public Weeks(int week){
+    public Weeks(int week) {
 
         this.week = week;
     }
+
     public int index(String workOut) {
         return switch (workOut) {
             case "벤치프레스" -> benchPressIndex;
@@ -32,16 +34,35 @@ public class Weeks {
     }
 
     public void increaseWeek() {
-        if (benchPressIndex + squtIndex + overHeadPressIndex + deadLiftIndex == 4) {
-            benchPressIndex=0;
-            squtIndex=0;
-            overHeadPressIndex=0;
-            deadLiftIndex=0;
-            week += 1;
-        }
+        week += 1;
     }
 
     public int week() {
         return week;
+    }
+
+    public boolean increase() {
+        return benchPressIndex + squtIndex + overHeadPressIndex + deadLiftIndex == 4;
+    }
+
+    public void initIndex() {
+        benchPressIndex = 0;
+        squtIndex = 0;
+        overHeadPressIndex = 0;
+        deadLiftIndex = 0;
+    }
+
+    public int startFrameIndex() {
+        return startFrameIndex;
+    }
+
+    public void increaseStartFrameIndex() {
+        startFrameIndex += 1;
+    }
+
+    public void initStartFrameIndex() {
+        if (benchPressIndex == 0 && squtIndex == 0 && overHeadPressIndex == 0 && deadLiftIndex == 0) {
+            startFrameIndex = 0;
+        }
     }
 }

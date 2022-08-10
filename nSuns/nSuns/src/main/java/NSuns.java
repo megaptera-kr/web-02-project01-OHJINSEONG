@@ -40,9 +40,10 @@ public class NSuns {
     private JTextField set7Rep;
     private JTextField set8Rep;
     private Reps reps;
-    private SaveReps saveReps;
+    private SaveRepsList saveRepsList;
     private List<Reps> repss;
     private JTextField nameTextField;
+    private List<TraningWeight1RM> traningWeight1RMs;
 
 
     public static void main(String[] args) throws FileNotFoundException {
@@ -53,17 +54,21 @@ public class NSuns {
 
     public NSuns() throws FileNotFoundException {
         LoadUserBody loadUserBody = new LoadUserBody();
-        LoadTrainingWeight loadTrainingWeight = new LoadTrainingWeight();
+        LoadTrainingWeightList loadTrainingWeightList = new LoadTrainingWeightList();
+        LoadRepsList loadRepsList = new LoadRepsList();
 
         this.user = LoadUserBody.Loader();
-        this.traningWeight1RM = LoadTrainingWeight.Loader();
+        this.traningWeight1RMs = LoadTrainingWeightList.Loader();
+        this.traningWeight1RM = traningWeight1RMs.get(traningWeight1RMs.size() - 1);
+        this.repss = LoadRepsList.Loader();
     }
 
     private void run() {
         createLifeStyles();
 
         weeks = new Weeks(1);
-        saveReps = new SaveReps();
+
+        saveRepsList = new SaveRepsList();
         repss = new ArrayList<>();
         reps = new Reps("", 0, 0, 0, 0, 0, 0, 0, 0);
         traingWeightCalculator = new TraingWeightCalculator();
@@ -108,6 +113,22 @@ public class NSuns {
         return button;
     }
 
+    private void initStartFrame() {
+        JFrame startFrame = new JFrame("Start");
+        startFrame.setLocationRelativeTo(null);
+        startFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        startFrame.setSize(200, 100);
+
+        traningWeight1RM = new TraningWeight1RM(traningWeight1RMs.get(traningWeight1RMs.size() - 1).benchPress(),
+                traningWeight1RMs.get(traningWeight1RMs.size() - 1).squt(),
+                traningWeight1RMs.get(traningWeight1RMs.size() - 1).overHeadPress(),
+                traningWeight1RMs.get(traningWeight1RMs.size() - 1).deadLift(), weeks.week());
+
+        startFrame.add(new JLabel(weeks.week() + "주차 훈련 시작!"));
+
+        startFrame.setVisible(true);
+    }
+
     private void initTrainingDiary() {
         menuPanel.add(goFisrtPagePanel("돌아가기"));
 
@@ -115,16 +136,61 @@ public class NSuns {
         panel.setLayout(new GridLayout(weeks.week(), 2));
         contentPanel.add(panel);
 
-        for (int i = 1; i <= weeks.week(); i += 1) {
+        for (int i = 1; i < weeks.week(); i += 1) {
             panel.add(new JLabel(i + " 주차"));
-            panel.add(goTrainingDiary(i));
+            panel.add(TrainingDiary(i));
         }
     }
 
-    private JButton goTrainingDiary(int week) {
+    private JButton TrainingDiary(int week) {
         JButton button = new JButton("보기");
         button.addActionListener(e -> {
+            displayRemoveAll();
 
+            initDiaryPanel(week);
+
+            updateAllDisplay();
+        });
+        return button;
+    }
+
+    private void initDiaryPanel(int week) {
+        menuPanel.add(goTrainingDiary("돌아가기"));
+
+        JPanel panel1 = new JPanel();
+        contentPanel.add(panel1);
+        JPanel panel2 = new JPanel();
+        contentPanel.add(panel2);
+
+        contentPanel.setLayout(new FlowLayout());
+
+        panel1.setLayout(new GridLayout(4, 1));
+        panel2.setLayout(new GridLayout(4, 1));
+
+        for (TraningWeight1RM traningWeight1RM : traningWeight1RMs) {
+            if (traningWeight1RM.week() == week - 1) {
+                panel1.add(new JLabel("벤치프레스 1RM      " + traningWeight1RM.benchPress() + " -> "));
+                panel1.add(new JLabel("스쿼트 1RM         " + traningWeight1RM.squt() + " -> "));
+                panel1.add(new JLabel("오버헤드프레스 1RM   " + traningWeight1RM.overHeadPress() + " -> "));
+                panel1.add(new JLabel("데드리프트 1RM      " + traningWeight1RM.deadLift() + " -> "));
+            }
+            if (traningWeight1RM.week() == week) {
+                panel2.add(new JLabel("" + traningWeight1RM.benchPress()));
+                panel2.add(new JLabel("" + traningWeight1RM.squt()));
+                panel2.add(new JLabel("" + traningWeight1RM.overHeadPress()));
+                panel2.add(new JLabel("" + traningWeight1RM.deadLift()));
+            }
+        }
+    }
+
+    private JButton goTrainingDiary(String 돌아가기) {
+        JButton button = new JButton(돌아가기);
+        button.addActionListener(e -> {
+            displayRemoveAll();
+
+            initTrainingDiary();
+
+            updateAllDisplay();
         });
         return button;
     }
@@ -157,10 +223,14 @@ public class NSuns {
         contentPanel.add(new JLabel("키: " + user.height() + "cm"));
         contentPanel.add(new JLabel("몸무게: " + user.weight() + "kg"));
 
-        showDisplayPanel.add(new JLabel("벤치프레스 1RM: " + traningWeight1RM.benchPress() + "kg"));
-        showDisplayPanel.add(new JLabel("스쿼트 1RM: " + traningWeight1RM.squt() + "kg"));
-        showDisplayPanel.add(new JLabel("오버헤드프레스 1RM: " + traningWeight1RM.overHeadPress() + "kg"));
-        showDisplayPanel.add(new JLabel("데드리프트 1RM: " + traningWeight1RM.deadLift() + "kg"));
+        showDisplayPanel.add(new JLabel("벤치프레스 1RM: " +
+                traningWeight1RMs.get(traningWeight1RMs.size() - 1).benchPress() + "kg"));
+        showDisplayPanel.add(new JLabel("스쿼트 1RM: " +
+                traningWeight1RMs.get(traningWeight1RMs.size() - 1).squt() + "kg"));
+        showDisplayPanel.add(new JLabel("오버헤드프레스 1RM: " +
+                traningWeight1RMs.get(traningWeight1RMs.size() - 1).overHeadPress() + "kg"));
+        showDisplayPanel.add(new JLabel("데드리프트 1RM: " +
+                traningWeight1RMs.get(traningWeight1RMs.size() - 1).deadLift() + "kg"));
     }
 
     private JButton programSetting(String 프로그램_세팅) {
@@ -215,7 +285,7 @@ public class NSuns {
     private void createTraningWeight1RMCreation() {
         traningWeight1RM = new TraningWeight1RM(Double.parseDouble(benchPress1RM.getText()),
                 Double.parseDouble(squt1RM.getText()), Double.parseDouble(overHeadPress1RM.getText()),
-                Double.parseDouble(deadLift1RM.getText()));
+                Double.parseDouble(deadLift1RM.getText()), 0);
     }
 
     private JButton programStartButton(String 프로그램_시작) {
@@ -226,13 +296,18 @@ public class NSuns {
             initSelectProgramPanel();
 
             updateAllDisplay();
+
+            weeks.initStartFrameIndex();
+            if (weeks.startFrameIndex() == 0) {
+                initStartFrame();
+            }
+            weeks.increaseStartFrameIndex();
         });
         return button;
     }
 
     private void initSelectProgramPanel() {
         menuPanel.add(goFisrtPagePanel("돌아가기"));
-
 
         JPanel labelPanel = new JPanel();
         contentPanel.add(labelPanel);
@@ -284,15 +359,11 @@ public class NSuns {
     private JButton programComplete(String workOut) {
         JButton button = new JButton("완료");
         button.addActionListener(e -> {
-            increaseIndex(workOut);
-
-            increaseWeek();
-
             createRepsCreation(workOut);
 
             increaseWeight(workOut);
 
-            saveTrainingWeight();
+            increaseIndex(workOut);
 
             saveReps();
 
@@ -302,9 +373,38 @@ public class NSuns {
 
             updateAllDisplay();
 
+            if (weeks.increase()) {
+                increaseWeek();
+                saveTrainingWeight();
+                initIndex();
+
+                displayRemoveAll();
+
+                initTrainingDiary();
+
+                updateAllDisplay();
+
+                initEndWeekFrame();
+            }
+
             createAlertFrame(workOut);
         });
         return button;
+    }
+
+    private void initEndWeekFrame() {
+        JFrame endWeekFrame = new JFrame("end");
+        endWeekFrame.setLocationRelativeTo(null);
+        endWeekFrame.setSize(300, 300);
+        endWeekFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        endWeekFrame.add(new JLabel("고생하셨습니다. " + (weeks.week() - 1) + " 주차 종료"));
+
+        endWeekFrame.setVisible(true);
+    }
+
+    private void initIndex() {
+        weeks.initIndex();
     }
 
     private void increaseWeek() {
@@ -347,32 +447,40 @@ public class NSuns {
         for (int i = 0; i < 3; i += 1) {
             switch (workOut) {
                 case "벤치프레스" -> labelPanel.add(new JLabel((i + 1) + ".Set " + workOut + " " +
-                        traingWeightCalculator.calculate((0.75 + 0.1 * i) * traningWeight1RM.benchPress()) +
+                        traingWeightCalculator.calculate((0.75 + 0.1 * i) *
+                                traningWeight1RMs.get(traningWeight1RMs.size() - 1).benchPress()) +
                         "kg(권장 " + (5 - 2 * i) + "회)"));
                 case "스쿼트" -> labelPanel.add(new JLabel((i + 1) + ".Set " + workOut + " " +
-                        traingWeightCalculator.calculate((0.75 + 0.1 * i) * traningWeight1RM.squt()) +
+                        traingWeightCalculator.calculate((0.75 + 0.1 * i) *
+                                traningWeight1RMs.get(traningWeight1RMs.size() - 1).squt()) +
                         "kg(권장 " + (5 - 2 * i) + "회)"));
                 case "오버헤드프레스" -> labelPanel.add(new JLabel((i + 1) + ".Set " + workOut + " " +
-                        traingWeightCalculator.calculate((0.75 + 0.1 * i) * traningWeight1RM.overHeadPress()) +
+                        traingWeightCalculator.calculate((0.75 + 0.1 * i) *
+                                traningWeight1RMs.get(traningWeight1RMs.size() - 1).overHeadPress()) +
                         "kg(권장 " + (5 - 2 * i) + "회)"));
                 case "데드리프트" -> labelPanel.add(new JLabel((i + 1) + ".Set " + workOut + " " +
-                        traingWeightCalculator.calculate((0.75 + 0.1 * i) * traningWeight1RM.deadLift()) +
+                        traingWeightCalculator.calculate((0.75 + 0.1 * i) *
+                                traningWeight1RMs.get(traningWeight1RMs.size() - 1).deadLift()) +
                         "kg(권장 " + (5 - 2 * i) + "회)"));
             }
         }
         for (int i = 0; i < 5; i += 1) {
             switch (workOut) {
                 case "벤치프레스" -> labelPanel.add(new JLabel((i + 4) + ".Set " + workOut + " " +
-                        traingWeightCalculator.calculate((0.90 - 0.05 * i) * traningWeight1RM.benchPress()) +
+                        traingWeightCalculator.calculate((0.90 - 0.05 * i) *
+                                traningWeight1RMs.get(traningWeight1RMs.size() - 1).benchPress()) +
                         "kg(권장 3회)"));
                 case "스쿼트" -> labelPanel.add(new JLabel((i + 4) + ".Set " + workOut + " " +
-                        traingWeightCalculator.calculate((0.90 - 0.05 * i) * traningWeight1RM.squt()) +
+                        traingWeightCalculator.calculate((0.90 - 0.05 * i) *
+                                traningWeight1RMs.get(traningWeight1RMs.size() - 1).squt()) +
                         "kg(권장 3회)"));
                 case "오버헤드프레스" -> labelPanel.add(new JLabel((i + 4) + ".Set " + workOut + " " +
-                        traingWeightCalculator.calculate((0.90 - 0.05 * i) * traningWeight1RM.overHeadPress()) +
+                        traingWeightCalculator.calculate((0.90 - 0.05 * i) *
+                                traningWeight1RMs.get(traningWeight1RMs.size() - 1).overHeadPress()) +
                         "kg(권장 3회)"));
                 case "데드리프트" -> labelPanel.add(new JLabel((i + 4) + ".Set " + workOut + " " +
-                        traingWeightCalculator.calculate((0.90 - 0.05 * i) * traningWeight1RM.deadLift()) +
+                        traingWeightCalculator.calculate((0.90 - 0.05 * i) *
+                                traningWeight1RMs.get(traningWeight1RMs.size() - 1).deadLift()) +
                         "kg(권장 3회)"));
             }
         }
@@ -631,22 +739,18 @@ public class NSuns {
     }
 
     private void saveTrainingWeight() {
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                try {
-                    SaveTrainingWeight saveTrainingWeight = new SaveTrainingWeight(traningWeight1RM);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
+        traningWeight1RMs.add(traningWeight1RM);
+        try {
+            SaveTrainingWeightList saveTrainingWeightList = new SaveTrainingWeightList(traningWeight1RMs);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private void saveReps() {
         repss.add(reps);
         try {
-            saveReps.SaveReps(repss);
+            saveRepsList.SaveReps(repss);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
