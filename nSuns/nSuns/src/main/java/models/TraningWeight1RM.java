@@ -5,13 +5,15 @@ public class TraningWeight1RM {
     private double squt1RM;
     private double overHeadPress1rm;
     private double deadLift1rm;
+    private int week;
 
     public TraningWeight1RM(double benchPress1RM, double squt1RM,
-                            double overHeadPress1rm, double deadLift1rm) {
+                            double overHeadPress1rm, double deadLift1rm, int week) {
         this.benchPress1RM = benchPress1RM;
         this.squt1RM = squt1RM;
         this.overHeadPress1rm = overHeadPress1rm;
         this.deadLift1rm = deadLift1rm;
+        this.week = week;
     }
 
     public double benchPress() {
@@ -40,6 +42,10 @@ public class TraningWeight1RM {
     }
 
     public String toString() {
-        return benchPress1RM + "," + squt1RM + "," + overHeadPress1rm + "," + deadLift1rm;
+        return benchPress1RM + "," + squt1RM + "," + overHeadPress1rm + "," + deadLift1rm + "," + week;
+    }
+
+    public int week() {
+        return week;
     }
 }
