@@ -16,6 +16,7 @@ public class NSuns {
     private JFrame frame;
     private JPanel contentPanel;
     private User user;
+    private Weeks weeks;
     private JTextField heightTextField;
     private JTextField ageTextField;
     private JTextField weightTextField;
@@ -61,6 +62,7 @@ public class NSuns {
     private void run() {
         createLifeStyles();
 
+        weeks = new Weeks(1);
         saveReps = new SaveReps();
         repss = new ArrayList<>();
         reps = new Reps("", 0, 0, 0, 0, 0, 0, 0, 0);
@@ -90,6 +92,41 @@ public class NSuns {
         menuPanel.add(programSetting("프로그램 세팅"));
 
         menuPanel.add(personalImformation("개인 정보"));
+
+        menuPanel.add(TrainingDiary("운동 일지"));
+    }
+
+    private JButton TrainingDiary(String 운동_일지) {
+        JButton button = new JButton(운동_일지);
+        button.addActionListener(e -> {
+            displayRemoveAll();
+
+            initTrainingDiary();
+
+            updateAllDisplay();
+        });
+        return button;
+    }
+
+    private void initTrainingDiary() {
+        menuPanel.add(goFisrtPagePanel("돌아가기"));
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(weeks.week(), 2));
+        contentPanel.add(panel);
+
+        for (int i = 1; i <= weeks.week(); i += 1) {
+            panel.add(new JLabel(i + " 주차"));
+            panel.add(goTrainingDiary(i));
+        }
+    }
+
+    private JButton goTrainingDiary(int week) {
+        JButton button = new JButton("보기");
+        button.addActionListener(e -> {
+
+        });
+        return button;
     }
 
     private JButton personalImformation(String 개인_정보) {
@@ -196,23 +233,38 @@ public class NSuns {
     private void initSelectProgramPanel() {
         menuPanel.add(goFisrtPagePanel("돌아가기"));
 
-        contentPanel.setLayout(new GridLayout(1, 4));
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 25));
-        contentPanel.add(programButton("벤치프레스"));
-        contentPanel.add(programButton("스쿼트"));
-        contentPanel.add(programButton("오버헤드프레스"));
-        contentPanel.add(programButton("데드리프트"));
 
-        showDisplayPanel.setPreferredSize(new Dimension(200, 500));
+        JPanel labelPanel = new JPanel();
+        contentPanel.add(labelPanel);
+        JPanel buttonPanel = new JPanel();
+        contentPanel.add(buttonPanel);
+
+        contentPanel.setLayout(new GridLayout(2, 1));
+
+        labelPanel.add(new Label(weeks.week() + " 주차"));
+
+        buttonPanel.setLayout(new GridLayout(1, 4));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 25));
+        buttonPanel.add(programButton("벤치프레스"));
+        buttonPanel.add(programButton("스쿼트"));
+        buttonPanel.add(programButton("오버헤드프레스"));
+        buttonPanel.add(programButton("데드리프트"));
+
+        showDisplayPanel.setPreferredSize(new Dimension(200, 450));
     }
 
     private JButton programButton(String workOut) {
         JButton button = new JButton(workOut);
         button.addActionListener(e -> {
-            displayRemoveAll();
+            if (weeks.index(workOut) == 0) {
+                displayRemoveAll();
+                initProgramPanel(workOut);
+            }
 
-            initProgramPanel(workOut);
-
+            if (weeks.index(workOut) == 1) {
+                showDisplayPanel.removeAll();
+                showDisplayPanel.add(new JLabel("수행완료한 운동입니다. 다른 운동을 골라주세요."));
+            }
             updateAllDisplay();
         });
         return button;
@@ -226,15 +278,21 @@ public class NSuns {
 
         InputRepsTextField();
 
-        showDisplayPanel.setPreferredSize(new Dimension(200, 200));
+        showDisplayPanel.setPreferredSize(new Dimension(200, 100));
     }
 
     private JButton programComplete(String workOut) {
         JButton button = new JButton("완료");
         button.addActionListener(e -> {
+            increaseIndex(workOut);
+
+            increaseWeek();
+
             createRepsCreation(workOut);
 
             increaseWeight(workOut);
+
+            saveTrainingWeight();
 
             saveReps();
 
@@ -247,6 +305,14 @@ public class NSuns {
             createAlertFrame(workOut);
         });
         return button;
+    }
+
+    private void increaseWeek() {
+        weeks.increaseWeek();
+    }
+
+    private void increaseIndex(String workOut) {
+        weeks.increaseIndex(workOut);
     }
 
     private void increaseWeight(String workOut) {
@@ -271,10 +337,12 @@ public class NSuns {
 
     private void trainingWeightCalculate(String workOut) {
         contentPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 0, 30));
+        contentPanel.setLayout(new FlowLayout());
 
         JPanel labelPanel = new JPanel();
         labelPanel.setLayout(new GridLayout(8, 1));
-        contentPanel.add(labelPanel);
+        labelPanel.setPreferredSize(new Dimension(250, 300));
+        contentPanel.add(labelPanel, BorderLayout.WEST);
 
         for (int i = 0; i < 3; i += 1) {
             switch (workOut) {
@@ -313,7 +381,8 @@ public class NSuns {
     private void InputRepsTextField() {
         JPanel textFieldPanel = new JPanel();
         textFieldPanel.setLayout(new GridLayout(8, 1));
-        contentPanel.add(textFieldPanel);
+        textFieldPanel.setPreferredSize(new Dimension(100, 300));
+        contentPanel.add(textFieldPanel, BorderLayout.EAST);
 
         textFieldPanel.add(set1Rep = new JTextField(10));
         textFieldPanel.add(set2Rep = new JTextField(10));
@@ -416,11 +485,18 @@ public class NSuns {
         button.addActionListener(e -> {
             displayRemoveAll();
 
+            removeCreateEmptyBorder();
+
             initFirstPage();
 
             updateAllDisplay();
         });
         return button;
+    }
+
+    private void removeCreateEmptyBorder() {
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        showDisplayPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
     }
 
     private void createLifeStyles() {

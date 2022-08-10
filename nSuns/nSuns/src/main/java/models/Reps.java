@@ -38,13 +38,13 @@ public class Reps {
         if (set3Rep >= 11) {
             return 10;
         }
-        if (set3Rep >= 8 && set3Rep < 11) {
+        if (set3Rep >= 8) {
             return 7.5;
         }
-        if (set3Rep >= 5 && set3Rep < 8) {
+        if (set3Rep >= 5) {
             return 5;
         }
-        if (set3Rep >= 2 && set3Rep < 5) {
+        if (set3Rep >= 2) {
             return 2.5;
         }
         return 0;
