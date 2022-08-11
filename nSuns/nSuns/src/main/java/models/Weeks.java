@@ -14,6 +14,10 @@ public class Weeks {
         this.week = week;
     }
 
+    public String toString() {
+        return "" + week;
+    }
+
     public int index(String workOut) {
         return switch (workOut) {
             case "벤치프레스" -> benchPressIndex;
