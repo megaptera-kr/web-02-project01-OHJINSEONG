@@ -6,7 +6,6 @@ public class User {
     private int height;
     private int weight;
     private String name;
-
     private String findGender;
 
     public User(String gender, int age, int height, int weight, String name) {

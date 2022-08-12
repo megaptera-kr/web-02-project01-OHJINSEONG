@@ -1,14 +1,13 @@
 package utils;
 
-import models.User;
 import models.Weeks;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class LoadWeeks {
-    public static Weeks Loader() throws FileNotFoundException {
+public class weeksLoader {
+    public static Weeks load() throws FileNotFoundException {
         int week = 0;
 
         File file = new File("weekLoader.csv");

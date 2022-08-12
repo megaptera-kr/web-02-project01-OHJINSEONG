@@ -6,8 +6,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class LoadUserBody {
-    public static User Loader() throws FileNotFoundException {
+public class UserBodyLoader {
+    public static User load() throws FileNotFoundException {
         String gender = "";
         int age = 0;
         int height = 0;
