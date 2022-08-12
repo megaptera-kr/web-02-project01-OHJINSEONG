@@ -18,5 +18,4 @@ class TraingWeightCalculatorTest {
         assertEquals(40,traingWeightCalculator.calculate(40));
         assertEquals(50,traingWeightCalculator.calculate(50));
     }
-
 }

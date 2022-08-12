@@ -2,11 +2,18 @@ package panels;
 
 import application.NSuns;
 import models.CalorieCalculator;
+import models.LifeStyle;
 import models.TraningWeight1RM;
 import models.User;
+import utils.SaveTrainingWeightList;
+import utils.SaveUserBody;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.util.List;
 
 public class PersonalImformationButtonPanel extends JPanel {
     private NSuns nSuns;
@@ -20,28 +27,32 @@ public class PersonalImformationButtonPanel extends JPanel {
     private User user;
     private CalorieCalculator calorieCalculator;
     private TraningWeight1RM traningWeight1RM;
+    private JTextField nameTextField;
+    private JTextField ageTextField;
+    private JTextField heightTextField;
+    private JTextField weightTextField;
+    private JFrame frame;
+    private List<LifeStyle> lifeStyles;
+    private List<TraningWeight1RM> traningWeight1RMs;
 
     public PersonalImformationButtonPanel(NSuns nSuns,
                                           JPanel menuPanel,
                                           JPanel contentPanel,
                                           JPanel displayPanel,
-                                          JTextField benchPress1RM,
-                                          JTextField squt1RM,
-                                          JTextField overHeadPress1RM,
-                                          JTextField deadLift1RM, User user,
-                                          CalorieCalculator calorieCalculator,
-                                          TraningWeight1RM traningWeight1RM){
+                                          User user,
+                                          TraningWeight1RM traningWeight1RM,
+                                          JFrame frame,
+                                          List<LifeStyle> lifeStyles,
+                                          List<TraningWeight1RM> traningWeight1RMs){
         this.nSuns = nSuns;
         this.menuPanel = menuPanel;
         this.contentPanel = contentPanel;
         this.displayPanel = displayPanel;
-        this.benchPress1RM = benchPress1RM;
-        this.squt1RM = squt1RM;
-        this.overHeadPress1RM = overHeadPress1RM;
-        this.deadLift1RM = deadLift1RM;
         this.user = user;
-        this.calorieCalculator = calorieCalculator;
         this.traningWeight1RM = traningWeight1RM;
+        this.frame = frame;
+        this.lifeStyles = lifeStyles;
+        this.traningWeight1RMs = traningWeight1RMs;
         this.add(nSuns.goFisrtPagePanelButton());
         this.add(setCalorieButton());
         this.add(programSettingButton());
@@ -53,11 +64,107 @@ public class PersonalImformationButtonPanel extends JPanel {
         button.addActionListener(e -> {
             nSuns.displayRemoveAll();
 
-            nSuns.inputBodyPanel();
+            inputBodyPanel();
 
             nSuns.displayUpdateAll();
         });
         return button;
+    }
+
+    public void inputBodyPanel() {
+        calorieCalculator = new CalorieCalculator();
+
+        contentPanel.setPreferredSize(new Dimension(200, 100));
+        displayPanel.setPreferredSize(new Dimension(200, 500));
+
+        JPanel panel = new JPanel();
+        menuPanel.add(panel);
+
+        JPanel inputPanel = new JPanel();
+        displayPanel.add(inputPanel);
+
+        panel.setLayout(new GridLayout(1, 2));
+        inputPanel.setLayout(new GridLayout(6, 2));
+        inputPanel.setPreferredSize(new Dimension(400, 150));
+
+        panel.add(goPersonalImpormationPanel());
+
+        panel.add(saveButton());
+
+        inputPanel.add(new JLabel("신체 조건을 기입하여 주십시오."));
+        inputPanel.add(new JLabel(""));
+
+        inputPanel.add(new JLabel("이름 : "));
+        inputPanel.add(nameTextField = new JTextField(10));
+
+        inputPanel.add(new JLabel("나이(세) : "));
+        inputPanel.add(ageTextField = new JTextField(10));
+
+        inputPanel.add(new JLabel("키(cm) : "));
+        inputPanel.add(heightTextField = new JTextField(10));
+
+        inputPanel.add(new JLabel("몸무게(kg) : "));
+        inputPanel.add(weightTextField = new JTextField(10));
+
+        inputPanel.add(selectGenderButton("남성"));
+
+        inputPanel.add(selectGenderButton("여성"));
+    }
+
+    private JButton selectGenderButton(String gender) {
+        JButton button = new JButton(gender);
+        button.addActionListener(e -> {
+            user.updateGender(gender);
+        });
+        return button;
+    }
+
+    public JButton goPersonalImpormationPanel() {
+        JButton button = new JButton("돌아가기");
+        button.addActionListener(e -> {
+            nSuns.displayRemoveAll();
+
+            nSuns.personalImformation();
+
+            nSuns.displayUpdateAll();
+        });
+        return button;
+    }
+
+    private JButton saveButton() {
+        JButton button = new JButton("완료");
+        button.addActionListener(e -> {
+            createUserCreation();
+
+            saveUserBody();
+
+            lifeStylePanel();
+
+            nSuns.displayRemoveAll();
+
+            nSuns.personalImformation();
+
+            nSuns.displayUpdateAll();
+        });
+        return button;
+    }
+
+    private void createUserCreation() {
+        user = new User(user.userGender(), Integer.parseInt(ageTextField.getText()), Integer.parseInt(heightTextField.getText()),
+                Integer.parseInt(weightTextField.getText()), nameTextField.getText());
+    }
+
+    private void saveUserBody() {
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+                    SaveUserBody saveUserBody = new SaveUserBody(user);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
     }
 
     private JButton programSettingButton() {
@@ -79,7 +186,55 @@ public class PersonalImformationButtonPanel extends JPanel {
 
             nSuns.displayRemoveAll();
 
-            nSuns.lifeStylePanel();
+            lifeStylePanel();
+
+            nSuns.displayUpdateAll();
+        });
+        return button;
+    }
+
+    public void lifeStylePanel() {
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 50, 100));
+        contentPanel.setPreferredSize(new Dimension(200, 200));
+        displayPanel.setPreferredSize(new Dimension(200, 300));
+
+        menuPanel.add(goInputBodyPanel());
+
+        JPanel titlePanel = new JPanel();
+        contentPanel.add(titlePanel);
+        contentPanel.setLayout(new GridLayout(5, 1));
+
+        titlePanel.add(new JLabel("활동 유형를 선택해주십시오."));
+
+        for (LifeStyle lifeStyle : lifeStyles) {
+            JPanel panel = new JPanel();
+            contentPanel.add(panel);
+            panel.add(createLifeStyleButton(lifeStyle));
+        }
+    }
+
+    private JButton createLifeStyleButton(LifeStyle lifeStyle) {
+        JButton button = new JButton(lifeStyle.style());
+        button.addActionListener(e -> {
+            displayPanel.removeAll();
+            displayPanel.setLayout(new GridLayout(2, 1));
+
+            calorieCalculator.activityCalorieCalculate(lifeStyle.activityIntensity());
+
+            displayPanel.add(new JLabel(lifeStyle.toString()));
+            displayPanel.add(new JLabel("섭취해야할 칼로리: " + calorieCalculator.activityCalorie()));
+
+            nSuns.updateDisplayPanel(displayPanel);
+        });
+        return button;
+    }
+
+    private JButton goInputBodyPanel() {
+        JButton button = new JButton("돌아가기");
+        button.addActionListener(e -> {
+            nSuns.displayRemoveAll();
+
+            inputBodyPanel();
 
             nSuns.displayUpdateAll();
         });
@@ -87,7 +242,7 @@ public class PersonalImformationButtonPanel extends JPanel {
     }
 
     private void programSettingPanel() {
-        menuPanel.add(nSuns.goPersonalImpormationPanel());
+        menuPanel.add(goPersonalImpormationPanel());
         menuPanel.add(programSettingCompleteButton());
 
         contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 100, 0, 100));
@@ -125,7 +280,7 @@ public class PersonalImformationButtonPanel extends JPanel {
         button.addActionListener(e -> {
             createTraningWeight1RMCreation();
 
-            nSuns.saveTrainingWeight();
+            saveTrainingWeight();
 
             nSuns.displayRemoveAll();
 
@@ -134,6 +289,15 @@ public class PersonalImformationButtonPanel extends JPanel {
             nSuns.displayUpdateAll();
         });
         return button;
+    }
+
+    public void saveTrainingWeight() {
+        traningWeight1RMs.add(traningWeight1RM);
+        try {
+            SaveTrainingWeightList saveTrainingWeightList = new SaveTrainingWeightList(traningWeight1RMs);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private void createTraningWeight1RMCreation() {

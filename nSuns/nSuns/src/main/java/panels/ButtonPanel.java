@@ -6,6 +6,7 @@ import models.TraingWeightCalculator;
 import models.TraningWeight1RM;
 import models.Weeks;
 import utils.SaveRepsList;
+import utils.SaveTrainingWeightList;
 import utils.SaveWeeks;
 
 import javax.swing.*;
@@ -45,14 +46,6 @@ public class ButtonPanel extends JPanel {
                        JPanel contentPanel,
                        TraingWeightCalculator traingWeightCalculator,
                        List<TraningWeight1RM> traningWeight1RMs,
-                       JTextField set1Rep,
-                       JTextField set2Rep,
-                       JTextField set3Rep,
-                       JTextField set4Rep,
-                       JTextField set5Rep,
-                       JTextField set6Rep,
-                       JTextField set7Rep,
-                       JTextField set8Rep,
                        TraningWeight1RM traningWeight1RM,
                        List<Reps> repss,
                        SaveRepsList saveRepsList,
@@ -64,14 +57,6 @@ public class ButtonPanel extends JPanel {
         this.contentPanel = contentPanel;
         this.traingWeightCalculator = traingWeightCalculator;
         this.traningWeight1RMs = traningWeight1RMs;
-        this.set1Rep = set1Rep;
-        this.set2Rep = set2Rep;
-        this.set3Rep = set3Rep;
-        this.set4Rep = set4Rep;
-        this.set5Rep = set5Rep;
-        this.set6Rep = set6Rep;
-        this.set7Rep = set7Rep;
-        this.set8Rep = set8Rep;
         this.traningWeight1RM = traningWeight1RM;
         this.repss = repss;
         this.saveRepsList = saveRepsList;
@@ -103,6 +88,7 @@ public class ButtonPanel extends JPanel {
 
     private void programPanel(String workOut) {
         menuPanel.add(goSelectProgramPanel());
+
         menuPanel.add(programComplete(workOut));
 
         trainingWeightCalculate(workOut);
@@ -224,7 +210,7 @@ public class ButtonPanel extends JPanel {
             if (weeks.increase()) {
                 increaseWeek();
 
-                nSuns.saveTrainingWeight();
+                saveTrainingWeight();
 
                 initIndex();
 
@@ -243,7 +229,6 @@ public class ButtonPanel extends JPanel {
         });
         return button;
     }
-
 
     private void createRepsCreation(String workOut) {
         reps = new Reps(workOut, Integer.parseInt(set1Rep.getText()), Integer.parseInt(set2Rep.getText()),
@@ -270,6 +255,15 @@ public class ButtonPanel extends JPanel {
     }
     private void increaseWeek() {
         weeks.increaseWeek();
+    }
+
+    public void saveTrainingWeight() {
+        traningWeight1RMs.add(traningWeight1RM);
+        try {
+            SaveTrainingWeightList saveTrainingWeightList = new SaveTrainingWeightList(traningWeight1RMs);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private void initIndex() {
