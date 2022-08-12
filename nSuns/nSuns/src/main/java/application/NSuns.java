@@ -107,15 +107,189 @@ public class NSuns {
     }
 
     public void firstPage() {
+        firstPageMenuPanel();
+
+        firstPageContentPanel();
+    }
+
+    private void firstPageMenuPanel() {
         menuPanel.add(programStartButton());
 
         menuPanel.add(personalImformationButton());
 
         menuPanel.add(trainingDiaryButton());
+    }
 
+    private JButton programStartButton() {
+        JButton button = new JButton("프로그램 시작");
+        button.addActionListener(e -> {
+            displayRemoveAll();
+
+            selectProgramPanel();
+
+            displayUpdateAll();
+
+            weeks.initStartFrameIndex();
+            if (weeks.startFrameIndex() == 0) {
+                initStartFrame();
+            }
+            weeks.increaseStartFrameIndex();
+        });
+        return button;
+    }
+
+    public void selectProgramPanel() {
+        menuPanel.add(goFisrtPagePanelButton());
+
+        JPanel labelPanel = new JPanel();
+        contentPanel.add(labelPanel);
+
+        ButtonPanel buttonPanel = new ButtonPanel(this,
+                weeks,
+                displayPanel,
+                menuPanel,
+                contentPanel,
+                traingWeightCalculator,
+                traningWeight1RMs,
+                traningWeight1RM,
+                repss,
+                saveRepsList,
+                frame
+        );
+
+        contentPanel.add(buttonPanel);
+
+        contentPanel.setLayout(new GridLayout(2, 1));
+
+        labelPanel.add(new Label(weeks.week() + " 주차"));
+
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 25));
+
+        displayPanel.setPreferredSize(new Dimension(200, 450));
+    }
+
+    private void initStartFrame() {
+        JFrame startFrame = new JFrame("Start");
+        startFrame.setLocationRelativeTo(null);
+        startFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        startFrame.setSize(200, 100);
+
+        createTraingWeightCreation();
+
+        startFrame.add(new JLabel(weeks.week() + "주차 훈련 시작!"));
+
+        startFrame.setVisible(true);
+    }
+
+    private JButton personalImformationButton() {
+        JButton button = new JButton("개인 정보");
+        button.addActionListener(e -> {
+            displayRemoveAll();
+
+            personalImformation();
+
+            displayUpdateAll();
+        });
+        return button;
+    }
+
+    public void personalImformation() {
+        pesonalImformationMenuPanel();
+
+        personalImformationContentPanel();
+
+        personalImformationDisplayPanel();
+    }
+
+    private void pesonalImformationMenuPanel() {
+        PersonalImformationButtonPanel personalImformationButtonPanel = new PersonalImformationButtonPanel(this,
+                menuPanel,
+                contentPanel,
+                displayPanel,
+                user,
+                traningWeight1RM,
+                frame,
+                lifeStyles,
+                traningWeight1RMs);
+
+        menuPanel.add(personalImformationButtonPanel);
+    }
+
+    private void personalImformationContentPanel() {
+        contentPanel.setLayout(new GridLayout(5, 1));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+        contentPanel.add(new JLabel("개인정보"));
+        contentPanel.add(new JLabel("이름: " + user.name()));
+        contentPanel.add(new JLabel("나이: " + user.age() + "세"));
+        contentPanel.add(new JLabel("키: " + user.height() + "cm"));
+        contentPanel.add(new JLabel("몸무게: " + user.weight() + "kg"));
+    }
+
+    private void personalImformationDisplayPanel() {
         JPanel panel = new JPanel();
+        panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        panel.setPreferredSize(new Dimension(400, 200));
+        panel.setLayout(new GridLayout(5, 1));
+        displayPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 100, 50));
+        displayPanel.add(panel);
+        displayPanel.setPreferredSize(new Dimension(450, 300));
+
+        panel.add(new JLabel("나의 1RM"));
+        panel.add(new JLabel("벤치프레스 1RM: " +
+                traningWeight1RMs.get(traningWeight1RMs.size() - 1).benchPress() + "kg"));
+        panel.add(new JLabel("스쿼트 1RM: " +
+                traningWeight1RMs.get(traningWeight1RMs.size() - 1).squt() + "kg"));
+        panel.add(new JLabel("오버헤드프레스 1RM: " +
+                traningWeight1RMs.get(traningWeight1RMs.size() - 1).overHeadPress() + "kg"));
+        panel.add(new JLabel("데드리프트 1RM: " +
+                traningWeight1RMs.get(traningWeight1RMs.size() - 1).deadLift() + "kg"));
+    }
+
+    private JButton trainingDiaryButton() {
+        JButton button = new JButton("운동 일지");
+        button.addActionListener(e -> {
+            displayRemoveAll();
+
+            trainingDiary();
+
+            displayUpdateAll();
+        });
+        return button;
+    }
+
+    public void trainingDiary() {
+        trainingDiaryMenuPanel();
+
+        trainingDiaryContentPanel();
+
+        displayPanel.setPreferredSize(new Dimension(200, 200));
+    }
+
+    private void trainingDiaryMenuPanel() {
+        menuPanel.add(goFisrtPagePanelButton());
+    }
+
+    private void trainingDiaryContentPanel() {
+        contentPanel.setLayout(new FlowLayout());
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(weeks.week(), 2));
         contentPanel.add(panel);
-        panel.add(documentationButton());
+        for (int i = 1; i < weeks.week(); i += 1) {
+            panel.add(new JLabel(i + " 주차"));
+            panel.add(trainingDiaryButton(i));
+        }
+    }
+
+    private JButton trainingDiaryButton(int week) {
+        JButton button = new JButton("보기");
+        button.addActionListener(e -> {
+            displayRemoveAll();
+
+            DiaryPanel(week);
+
+            displayUpdateAll();
+        });
+        return button;
     }
 
     private JButton documentationButton() {
@@ -174,66 +348,11 @@ public class NSuns {
         displayPanel.setPreferredSize(new Dimension(200, 50));
     }
 
-    private JButton trainingDiaryButton() {
-        JButton button = new JButton("운동 일지");
-        button.addActionListener(e -> {
-            displayRemoveAll();
-
-            trainingDiary();
-
-            displayUpdateAll();
-        });
-        return button;
-    }
-
-    private void initStartFrame() {
-        JFrame startFrame = new JFrame("Start");
-        startFrame.setLocationRelativeTo(null);
-        startFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        startFrame.setSize(200, 100);
-
-        createTraingWeightCreation();
-
-        startFrame.add(new JLabel(weeks.week() + "주차 훈련 시작!"));
-
-        startFrame.setVisible(true);
-    }
-
     private void createTraingWeightCreation() {
         traningWeight1RM = new TraningWeight1RM(traningWeight1RMs.get(traningWeight1RMs.size() - 1).benchPress(),
                 traningWeight1RMs.get(traningWeight1RMs.size() - 1).squt(),
                 traningWeight1RMs.get(traningWeight1RMs.size() - 1).overHeadPress(),
                 traningWeight1RMs.get(traningWeight1RMs.size() - 1).deadLift(), weeks.week());
-    }
-
-    public void trainingDiary() {
-        menuPanel.add(goFisrtPagePanelButton());
-
-        JPanel panel = new JPanel();
-
-        contentPanel.setLayout(new FlowLayout());
-
-        panel.setLayout(new GridLayout(weeks.week(), 2));
-
-        contentPanel.add(panel);
-
-        for (int i = 1; i < weeks.week(); i += 1) {
-            panel.add(new JLabel(i + " 주차"));
-            panel.add(trainingDiary(i));
-        }
-        displayPanel.setPreferredSize(new Dimension(200, 200));
-    }
-
-    private JButton trainingDiary(int week) {
-        JButton button = new JButton("보기");
-        button.addActionListener(e -> {
-            displayRemoveAll();
-
-            DiaryPanel(week);
-
-            displayUpdateAll();
-        });
-        return button;
     }
 
     private void DiaryPanel(int week) {
@@ -277,108 +396,6 @@ public class NSuns {
         return button;
     }
 
-    private JButton personalImformationButton() {
-        JButton button = new JButton("개인 정보");
-        button.addActionListener(e -> {
-            displayRemoveAll();
-
-            personalImformation();
-
-            displayUpdateAll();
-        });
-        return button;
-    }
-
-    public void personalImformation() {
-        PersonalImformationButtonPanel personalImformationButtonPanel = new PersonalImformationButtonPanel(this,
-                menuPanel,
-                contentPanel,
-                displayPanel,
-                user,
-                traningWeight1RM,
-                frame,
-                lifeStyles,
-                traningWeight1RMs);
-
-        menuPanel.add(personalImformationButtonPanel);
-
-        contentPanel.setLayout(new GridLayout(5, 1));
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        displayPanel.add(panel);
-        displayPanel.setPreferredSize(new Dimension(450, 300));
-        panel.setPreferredSize(new Dimension(400, 200));
-        displayPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 100, 50));
-        panel.setLayout(new GridLayout(5, 1));
-
-        contentPanel.add(new JLabel("개인정보"));
-        contentPanel.add(new JLabel("이름: " + user.name()));
-        contentPanel.add(new JLabel("나이: " + user.age() + "세"));
-        contentPanel.add(new JLabel("키: " + user.height() + "cm"));
-        contentPanel.add(new JLabel("몸무게: " + user.weight() + "kg"));
-
-
-        panel.add(new JLabel("나의 1RM"));
-        panel.add(new JLabel("벤치프레스 1RM: " +
-                traningWeight1RMs.get(traningWeight1RMs.size() - 1).benchPress() + "kg"));
-        panel.add(new JLabel("스쿼트 1RM: " +
-                traningWeight1RMs.get(traningWeight1RMs.size() - 1).squt() + "kg"));
-        panel.add(new JLabel("오버헤드프레스 1RM: " +
-                traningWeight1RMs.get(traningWeight1RMs.size() - 1).overHeadPress() + "kg"));
-        panel.add(new JLabel("데드리프트 1RM: " +
-                traningWeight1RMs.get(traningWeight1RMs.size() - 1).deadLift() + "kg"));
-    }
-
-    private JButton programStartButton() {
-        JButton button = new JButton("프로그램 시작");
-        button.addActionListener(e -> {
-            displayRemoveAll();
-
-            selectProgramPanel();
-
-            displayUpdateAll();
-
-            weeks.initStartFrameIndex();
-            if (weeks.startFrameIndex() == 0) {
-                initStartFrame();
-            }
-            weeks.increaseStartFrameIndex();
-        });
-        return button;
-    }
-
-    public void selectProgramPanel() {
-        menuPanel.add(goFisrtPagePanelButton());
-
-        JPanel labelPanel = new JPanel();
-        contentPanel.add(labelPanel);
-
-        ButtonPanel buttonPanel = new ButtonPanel(this,
-                weeks,
-                displayPanel,
-                menuPanel,
-                contentPanel,
-                traingWeightCalculator,
-                traningWeight1RMs,
-                traningWeight1RM,
-                repss,
-                saveRepsList,
-                frame
-                );
-
-        contentPanel.add(buttonPanel);
-
-        contentPanel.setLayout(new GridLayout(2, 1));
-
-        labelPanel.add(new Label(weeks.week() + " 주차"));
-
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 25));
-
-        displayPanel.setPreferredSize(new Dimension(200, 450));
-    }
-
     public JButton goFisrtPagePanelButton() {
         JButton button = new JButton("돌아가기");
         button.addActionListener(e -> {
@@ -402,6 +419,12 @@ public class NSuns {
         updateDisplayPanel(menuPanel);
         updateDisplayPanel(contentPanel);
         updateDisplayPanel(displayPanel);
+    }
+
+    private void firstPageContentPanel() {
+        JPanel panel = new JPanel();
+        contentPanel.add(panel);
+        panel.add(documentationButton());
     }
 
     private void displayFrame() {

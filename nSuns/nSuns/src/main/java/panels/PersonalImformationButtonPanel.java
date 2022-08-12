@@ -80,16 +80,20 @@ public class PersonalImformationButtonPanel extends JPanel {
         JPanel panel = new JPanel();
         menuPanel.add(panel);
 
-        JPanel inputPanel = new JPanel();
-        displayPanel.add(inputPanel);
-
         panel.setLayout(new GridLayout(1, 2));
-        inputPanel.setLayout(new GridLayout(6, 2));
-        inputPanel.setPreferredSize(new Dimension(400, 150));
 
         panel.add(goPersonalImpormationPanel());
 
         panel.add(saveButton());
+
+        bodyInputPanel();
+    }
+
+    private void bodyInputPanel() {
+        JPanel inputPanel = new JPanel();
+        displayPanel.add(inputPanel);
+        inputPanel.setLayout(new GridLayout(6, 2));
+        inputPanel.setPreferredSize(new Dimension(400, 150));
 
         inputPanel.add(new JLabel("신체 조건을 기입하여 주십시오."));
         inputPanel.add(new JLabel(""));
@@ -134,8 +138,6 @@ public class PersonalImformationButtonPanel extends JPanel {
     private JButton saveButton() {
         JButton button = new JButton("완료");
         button.addActionListener(e -> {
-            createUserCreation();
-
             saveUserBody();
 
             lifeStylePanel();
@@ -149,12 +151,8 @@ public class PersonalImformationButtonPanel extends JPanel {
         return button;
     }
 
-    private void createUserCreation() {
-        user = new User(user.userGender(), Integer.parseInt(ageTextField.getText()), Integer.parseInt(heightTextField.getText()),
-                Integer.parseInt(weightTextField.getText()), nameTextField.getText());
-    }
-
-    private void saveUserBody() {
+    public void saveUserBody() {
+        createUserCreation();
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -165,6 +163,11 @@ public class PersonalImformationButtonPanel extends JPanel {
                 }
             }
         });
+    }
+
+    private void createUserCreation() {
+        user = new User(user.userGender(), Integer.parseInt(ageTextField.getText()), Integer.parseInt(heightTextField.getText()),
+                Integer.parseInt(weightTextField.getText()), nameTextField.getText());
     }
 
     private JButton programSettingButton() {
