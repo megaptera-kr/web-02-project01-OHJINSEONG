@@ -8,6 +8,9 @@ class UserTest {
     @Test
     void creation() {
         User user = new User("남성", 28, 182, 82,"오진성");
+
+        assertNotNull(user);
+        assertEquals(user.age(), 28);
     }
 
     @Test

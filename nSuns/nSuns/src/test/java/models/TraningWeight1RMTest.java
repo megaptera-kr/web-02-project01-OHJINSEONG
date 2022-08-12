@@ -12,7 +12,8 @@ class TraningWeight1RMTest {
 
     @Test
     void benchPress() {
-        TraningWeight1RM traningWeight1RM = new TraningWeight1RM(100, 200, 60, 200,0);
+        TraningWeight1RM traningWeight1RM = new TraningWeight1RM(100, 200, 60, 200,0
+        );
 
         assertEquals(100,traningWeight1RM.benchPress());
     }
