@@ -82,7 +82,6 @@ public class ButtonPanel extends JPanel {
         this.add(programButton("스쿼트"));
         this.add(programButton("오버헤드프레스"));
         this.add(programButton("데드리프트"));
-
     }
 
     private JButton programButton(String workOut) {
@@ -164,9 +163,6 @@ public class ButtonPanel extends JPanel {
             }
         }
     }
-
-
-
 
     private void InputRepsTextField() {
         JPanel textFieldPanel = new JPanel();
@@ -293,7 +289,6 @@ public class ButtonPanel extends JPanel {
         });
     }
 
-
     private void initEndWeekFrame() {
         JFrame endWeekFrame = new JFrame("end");
         endWeekFrame.setLocationRelativeTo(null);
@@ -314,6 +309,4 @@ public class ButtonPanel extends JPanel {
 
         alertFrame.add(new Label("축하합니다. " + workOut + " 중량이 " + reps.overReps() + "kg 증가하였습니다!"));
     }
-
 }
-
