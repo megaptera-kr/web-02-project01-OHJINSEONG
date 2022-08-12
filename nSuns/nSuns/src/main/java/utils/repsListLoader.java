@@ -39,7 +39,7 @@ public class repsListLoader {
         int set7Rep = Integer.parseInt(words[7]);
         int set8Rep = Integer.parseInt(words[8]);
 
-        Reps reps = new Reps(type,set1Rep,set2Rep,set3Rep,set4Rep,set5Rep,set6Rep,set7Rep,set8Rep);
+        Reps reps = new Reps(type, set1Rep, set2Rep, set3Rep, set4Rep, set5Rep, set6Rep, set7Rep, set8Rep);
 
         return reps;
     }

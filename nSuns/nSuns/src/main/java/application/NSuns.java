@@ -5,18 +5,16 @@ import panels.ButtonPanel;
 import panels.PersonalImformationButtonPanel;
 import utils.*;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class NSuns {
     private JFrame frame;
     private JPanel contentPanel;
-    private User user;
+    private final User user;
     private Weeks weeks;
     private JPanel menuPanel;
     private List<LifeStyle> lifeStyles;
@@ -186,14 +184,18 @@ public class NSuns {
         button.addActionListener(e -> {
             displayRemoveAll();
 
-            personalImformation();
+            try {
+                personalImformation();
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
 
             displayUpdateAll();
         });
         return button;
     }
 
-    public void personalImformation() {
+    public void personalImformation() throws FileNotFoundException {
         pesonalImformationMenuPanel();
 
         personalImformationContentPanel();
@@ -201,7 +203,7 @@ public class NSuns {
         personalImformationDisplayPanel();
     }
 
-    private void pesonalImformationMenuPanel() {
+    private void pesonalImformationMenuPanel() throws FileNotFoundException {
         PersonalImformationButtonPanel personalImformationButtonPanel = new PersonalImformationButtonPanel(this,
                 menuPanel,
                 contentPanel,
@@ -230,6 +232,7 @@ public class NSuns {
         panel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         panel.setPreferredSize(new Dimension(400, 200));
         panel.setLayout(new GridLayout(5, 1));
+
         displayPanel.setBorder(BorderFactory.createEmptyBorder(0, 50, 100, 50));
         displayPanel.add(panel);
         displayPanel.setPreferredSize(new Dimension(450, 300));

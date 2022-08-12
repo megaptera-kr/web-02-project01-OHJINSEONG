@@ -23,37 +23,38 @@ nSuns 프로그램이란 해외 유명 헬스 루틴인데 나의 4대 운동
 
 ## 2. 프로젝트 이미지
 
-<img src = "img.png">
+<img width="441" alt="스크린샷 2022-08-12 오후 1 40 56" src="https://user-images.githubusercontent.com/107606892/184290174-f7f90c99-3139-4efe-b7e2-2feaa3228071.png">
 
-<img src ="img_1.png">
+<img width="439" alt="스크린샷 2022-08-12 오후 1 41 27" src="https://user-images.githubusercontent.com/107606892/184290218-19f9f9bf-3447-489b-8407-28a6a05f50ee.png">
+
 
 ## 3. 프로젝트 계획 및 회고
 - 프로젝트 설계
-https://github.com/1mptera/web-02-project01-OHJINSEONG/issues/1
+ https://github.com/1mptera/web-02-project01-OHJINSEONG/issues/1
 
 - 월요일 작업일지 및 회고
-작업일지:https://github.com/1mptera/web-02-project01-OHJINSEONG/issues/5
-회고:https://ojseong0828.tistory.com/47
+ 1.작업일지:https://github.com/1mptera/web-02-project01-OHJINSEONG/issues/5
+ 2.회고:https://ojseong0828.tistory.com/47
 
 - 화요일 작업일지 및 회고
-작업일지:https://github.com/1mptera/web-02-project01-OHJINSEONG/issues/8
-회고:https://ojseong0828.tistory.com/46
+ 1.작업일지:https://github.com/1mptera/web-02-project01-OHJINSEONG/issues/8
+ 2.회고:https://ojseong0828.tistory.com/46
 
 - 수요일 작업일지 및 회고
-작업일지:https://github.com/1mptera/web-02-project01-OHJINSEONG/issues/11
-회고:https://ojseong0828.tistory.com/45
+ 1.작업일지:https://github.com/1mptera/web-02-project01-OHJINSEONG/issues/11
+ 2.회고:https://ojseong0828.tistory.com/45
 
 - 목요일 작업일지 및 회고
-작업일지:https://github.com/1mptera/web-02-project01-OHJINSEONG/issues/13
-회고:https://ojseong0828.tistory.com/44
+ 1.작업일지:https://github.com/1mptera/web-02-project01-OHJINSEONG/issues/13
+ 2.회고:https://ojseong0828.tistory.com/44
 
 ## 4. 프로젝트 실행 명령어
 - Compile 
-- ./gradlew compileJava
-- java
+ ./gradlew compileJava
+ java
 
 - Run
-- ./gradlew run
+ ./gradlew run
 
 - Run test
 - ./gradlew test

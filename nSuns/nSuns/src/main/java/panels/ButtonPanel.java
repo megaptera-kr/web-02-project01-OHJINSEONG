@@ -176,8 +176,6 @@ public class ButtonPanel extends JPanel {
         textFieldPanel.add(new JLabel("회"));
     }
 
-
-
     public JButton goSelectProgramPanel() {
         JButton button = new JButton("돌아가기");
         button.addActionListener(e -> {
@@ -244,7 +242,6 @@ public class ButtonPanel extends JPanel {
         weeks.increaseIndex(workOut);
     }
 
-
     private void saveReps() {
         repss.add(reps);
         try {
@@ -253,6 +250,7 @@ public class ButtonPanel extends JPanel {
             throw new RuntimeException(ex);
         }
     }
+
     private void increaseWeek() {
         weeks.increaseWeek();
     }

@@ -1,7 +1,6 @@
 package utils;
 
 import models.TraningWeight1RM;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;

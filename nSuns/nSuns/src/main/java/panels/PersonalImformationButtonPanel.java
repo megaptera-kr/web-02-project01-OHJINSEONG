@@ -7,19 +7,19 @@ import models.TraningWeight1RM;
 import models.User;
 import utils.SaveTrainingWeightList;
 import utils.SaveUserBody;
+import utils.UserBodyLoader;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
 public class PersonalImformationButtonPanel extends JPanel {
-    private NSuns nSuns;
-    private JPanel menuPanel;
-    private JPanel contentPanel;
-    private JPanel displayPanel;
+    private final NSuns nSuns;
+    private final JPanel menuPanel;
+    private final JPanel contentPanel;
+    private final JPanel displayPanel;
     private JTextField benchPress1RM;
     private JTextField squt1RM;
     private JTextField overHeadPress1RM;
@@ -32,8 +32,8 @@ public class PersonalImformationButtonPanel extends JPanel {
     private JTextField heightTextField;
     private JTextField weightTextField;
     private JFrame frame;
-    private List<LifeStyle> lifeStyles;
-    private List<TraningWeight1RM> traningWeight1RMs;
+    private final List<LifeStyle> lifeStyles;
+    private final List<TraningWeight1RM> traningWeight1RMs;
 
     public PersonalImformationButtonPanel(NSuns nSuns,
                                           JPanel menuPanel,
@@ -43,12 +43,15 @@ public class PersonalImformationButtonPanel extends JPanel {
                                           TraningWeight1RM traningWeight1RM,
                                           JFrame frame,
                                           List<LifeStyle> lifeStyles,
-                                          List<TraningWeight1RM> traningWeight1RMs){
+                                          List<TraningWeight1RM> traningWeight1RMs) throws FileNotFoundException {
+
+        UserBodyLoader userBodyLoader = new UserBodyLoader();
+
         this.nSuns = nSuns;
         this.menuPanel = menuPanel;
         this.contentPanel = contentPanel;
         this.displayPanel = displayPanel;
-        this.user = user;
+        this.user = userBodyLoader.load();
         this.traningWeight1RM = traningWeight1RM;
         this.frame = frame;
         this.lifeStyles = lifeStyles;
@@ -128,7 +131,11 @@ public class PersonalImformationButtonPanel extends JPanel {
         button.addActionListener(e -> {
             nSuns.displayRemoveAll();
 
-            nSuns.personalImformation();
+            try {
+                nSuns.personalImformation();
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
 
             nSuns.displayUpdateAll();
         });
@@ -140,11 +147,13 @@ public class PersonalImformationButtonPanel extends JPanel {
         button.addActionListener(e -> {
             saveUserBody();
 
-            lifeStylePanel();
-
             nSuns.displayRemoveAll();
 
-            nSuns.personalImformation();
+            try {
+                nSuns.personalImformation();
+            } catch (FileNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
 
             nSuns.displayUpdateAll();
         });
@@ -153,16 +162,11 @@ public class PersonalImformationButtonPanel extends JPanel {
 
     public void saveUserBody() {
         createUserCreation();
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                try {
-                    SaveUserBody saveUserBody = new SaveUserBody(user);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
+        try {
+            SaveUserBody saveUserBody = new SaveUserBody(user);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private void createUserCreation() {

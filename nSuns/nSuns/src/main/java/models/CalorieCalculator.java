@@ -1,7 +1,6 @@
 package models;
 
 public class CalorieCalculator {
-
     private double basicCalorie;
     private double activityCalorie;
 
