@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class LoadRepsList {
-    public static List<Reps> Loader() throws FileNotFoundException {
+public class repsListLoader {
+    public static List<Reps> load() throws FileNotFoundException {
         List<Reps> repss = new ArrayList<>();
 
         File file = new File("repsLoader.csv");

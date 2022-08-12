@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class LoadTrainingWeightList {
-    public static List<TraningWeight1RM> Loader() throws FileNotFoundException {
+public class TrainingWeightListLoader {
+    public static List<TraningWeight1RM> load() throws FileNotFoundException {
         List<TraningWeight1RM> traningWeight1RMs = new ArrayList<>();
 
         File file = new File("trainingWeightLoader.csv");
